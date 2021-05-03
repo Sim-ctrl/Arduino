@@ -5,7 +5,7 @@ des WLAN-Chipsatzes so programmierbar ist, dass er selbststeändig die Seite auf
 Wie der NodeMCU ohne eines IFTTT Accounts eine Mail versenden kann, unzwar nur mithilfe eines Google Accounts; Siehe https://github.com/Sim-ctrl/Arduino/tree/main/GoogleEmail
 
 Weitere Infos zum Projekt, wie z.B. Fotos, Grundeinstellungen oder physische Verbindungen am NodeMCU folgen noch!
-Bitte nur zur inspiration nutzen #Greenhead
+Bitte nur zur inspiration nutzen #Greenhat
 
 
 Hiermit übernehme ich keine Haftung oder sonstiges bei Problemen oder Unregelmäßigkeiten.
