@@ -1,10 +1,68 @@
-<NotepadPlus>
-    <Session activeView="0">
-        <mainView activeIndex="2">
-            <File firstVisibleLine="0" xOffset="0" scrollWidth="976" startPos="242" endPos="316" selMode="0" lang="Python" encoding="-1" filename="C:\Users\Simon\Desktop\Skripts\testv2.py" backupFilePath="Z:\hacken\Notepad++\backup\testv2.py@2020-11-24_175043" originalFileLastModifTimestamp="-1309183820" originalFileLastModifTimestampHigh="30851711" mapFirstVisibleDisplayLine="-1" mapFirstVisibleDocLine="-1" mapLastVisibleDocLine="-1" mapNbLine="-1" mapHigherPos="-1" mapWidth="-1" mapHeight="-1" mapKByteInDoc="0" mapWrapIndentMode="-1" mapIsWrap="no" />
-            <File firstVisibleLine="0" xOffset="0" scrollWidth="824" startPos="321" endPos="321" selMode="0" lang="Python" encoding="-1" filename="C:\Users\Simon\Desktop\Skripts\nuroffen.py" backupFilePath="" originalFileLastModifTimestamp="-408630601" originalFileLastModifTimestampHigh="30851718" mapFirstVisibleDisplayLine="-1" mapFirstVisibleDocLine="-1" mapLastVisibleDocLine="-1" mapNbLine="-1" mapHigherPos="-1" mapWidth="-1" mapHeight="-1" mapKByteInDoc="0" mapWrapIndentMode="-1" mapIsWrap="no" />
-            <File firstVisibleLine="4" xOffset="0" scrollWidth="1368" startPos="1313" endPos="1313" selMode="0" lang="C++" encoding="-1" filename="J:\Arduino\Tuersensor_IFTTT_Email\Tuersensor_IFTTT_Email.ino" backupFilePath="Z:\hacken\Notepad++\backup\Tuersensor_IFTTT_Email.ino@2021-05-03_163927" originalFileLastModifTimestamp="1854707200" originalFileLastModifTimestampHigh="30883675" mapFirstVisibleDisplayLine="-1" mapFirstVisibleDocLine="-1" mapLastVisibleDocLine="-1" mapNbLine="-1" mapHigherPos="-1" mapWidth="-1" mapHeight="-1" mapKByteInDoc="5374031" mapWrapIndentMode="-1" mapIsWrap="no" />
-        </mainView>
-        <subView activeIndex="0" />
-    </Session>
-</NotepadPlus>
+include <ESP8266WiFi.h> //Boardbibliotheken müssen installiert sein
+	#include <ESP8266HTTPClient.h>
+	
+	char ssid[] = "WLAN12345";       // deine Wlan SSID (Name)
+	char password[] = "Admin123";  // dein Wlan Passwort 
+	bool knopfi = false;   //ein boolean wird erzeugt, der entweder true oder false sein kann 
+	int Reading; 
+	
+	
+	
+	
+	void setup() {
+	  pinMode(D1, INPUT_PULLUP);
+	  pinMode(LED_BUILTIN,OUTPUT); 
+	  digitalWrite(LED_BUILTIN, HIGH);
+	  Serial.begin(115200); //Start des seriellen Monitors, zur zeitnahen Überprüfung 
+	  WiFi.mode(WIFI_STA);
+	  WiFi.disconnect();
+	  delay(100);
+	
+	  Serial.print("Connecting Wifi: ");
+	  Serial.println(ssid);
+	  WiFi.begin(ssid, password);
+	  while (WiFi.status() != WL_CONNECTED) {
+	    Serial.print(".");
+	    delay(500);
+	  }
+	  Serial.println("");
+	  Serial.println("WiFi connected");
+	  Serial.println("IP address: ");
+	  IPAddress ip = WiFi.localIP();
+	  Serial.println(ip);
+	
+	
+	
+	  if (knopfi == false) // damit diese Fallunterscheidung nur einmal aktiv wird
+	    {                                        
+	    knopfi = true;
+	  HTTPClient http;
+	  http.begin("http://maker.ifttt.com/trigger/EVENTNAME/with/key/Vorgegebener Code von Webhooks<ifttt");   //!!! http und nicht httpS !!!
+	  http.GET();
+	  http.end();
+	  Serial.print("EVENTNAME wurde versendet");
+	}}
+	
+	void loop() //wiederholt sich fortlaufend
+	{
+	  Reading = digitalRead(D1); // liest den Pin D1 aus - dort ist der eine kontakt des Reed-Schalters anzubinden, genauso wie an einem GROUND Anschluss des NodeMCUS
+	  if(Reading == HIGH)   //Wenn Kontakt zwischen Tür und Wand weg ist
+	  { 
+	        digitalWrite(LED_BUILTIN, LOW);
+	        HTTPClient http;
+	        http.begin("http://maker.ifttt.com/trigger/EVENTNAME2/with/key/Vorgegebener Code von Webhooks<ifttt");//!!! http und nicht httpS !!! + der selbe Code wie zuvor
+	        http.GET();
+	        http.end();
+	        Serial.println("...EVENTNAME2...Email wurde versand");
+	        Serial.println("15sek warten");
+	        delay(15000); // 15sek verbleiben um die Tür wieder in normalzustand zu versetzen
+	        }
+	
+	        if(Reading == LOW)
+	       {
+	          digitalWrite(LED_BUILTIN, HIGH);
+	          Serial.println("Tür ist zu");
+	          delay(500); //ein kurzer Delay ist nötig, um Performancetechnisch dabei zu bleiben
+	          
+	          }
+	     }
